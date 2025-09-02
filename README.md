@@ -70,4 +70,4 @@ The returned object of this last function has six columns:
     - If DZsig-POS, DZsig-POS
     - Else, COO (GCB or Unclassified)
 
-For more details, please refer to the docmumentation in the package.
+For more details, please refer to the documentation in the package.
