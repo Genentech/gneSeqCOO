@@ -83,3 +83,34 @@ or if our gene model changes).
 ```{r,eval=FALSE}
 pred = coo_predict(norm_main)
 ```
+
+
+# DZsig calling
+
+The DZsig classifier can be applied to the same `cds` object: 
+
+```{r,eval=FALSE}
+dzsig_pred = dzsig_rnaseq(cds)
+```
+
+Thresholds for the DZsig classification are as published for the NanoString DLBCL90 assay (Ennishi et al., *J Clin Oncol* 2019; Data Supplement). 
+
+It is also possible obtain both DZsig and COO calls and generate a combined "refined COO" classification: 
+
+```{r,eval=FALSE}
+refined_pred = refined_coo_rnaseq(cds)
+```
+
+The returned object of this last function has six columns: 
+
+  - Sample IDs, drawn from the column names of the cds object.
+  - LPS_COO - the linear predictor score for the COO classification
+  - COO - the Cell of Origin classification; either GCB, ABC, or Unclassified
+  - LPS_DZsig - the linear predictor score for the DZsig classification
+  - DZsig - the Dark Zone signature classification; either DZsig-POS, DZsig-IND, or DZsig-NEG
+  - refined_COO - the refined Cell of Origin classification, which is assigned hierarchically: 
+    - If ABC, then ABC
+    - If DZsig-POS, DZsig-POS
+    - Else, COO (GCB or Unclassified)
+
+For more details, please refer to the documentation in the package.

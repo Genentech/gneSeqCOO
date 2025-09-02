@@ -7,7 +7,9 @@
 get_id_type(cds)
 }
 \arguments{
-\item{cds}{- a DESeqDataSet object, with raw counts in the "counts" slot.}
+\item{cds}{\itemize{
+\item a DESeqDataSet object, with raw counts in the "counts" slot.
+}}
 }
 \value{
 string of IGIS version 3.0 or 4.0

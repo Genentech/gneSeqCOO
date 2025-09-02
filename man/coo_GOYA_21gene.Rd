@@ -8,7 +8,7 @@
 \title{Primary COO classifier}
 \format{
 An object of class 'lm'. Coefficients can be viewed by accessing
-   the '$coefficients' slot.
+the '$coefficients' slot.
 
 An object of class \code{lm} of length 7.
 }

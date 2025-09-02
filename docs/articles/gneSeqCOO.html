@@ -8,8 +8,8 @@
 <meta name="description" content="gneSeqCOO">
 <title>Predicting COO for RNASeq data • gneSeqCOO</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Predicting COO for RNASeq data">
 <meta property="og:description" content="gneSeqCOO">
@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">gneSeqCOO</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,7 +62,7 @@
                         <h4 data-toc-skip class="author">Christopher
 Bolen</h4>
             
-            <h4 data-toc-skip class="date">2024-08-15</h4>
+            <h4 data-toc-skip class="date">2025-09-02</h4>
       
       
       <div class="d-none name"><code>gneSeqCOO.Rmd</code></div>
@@ -145,6 +145,42 @@ genes are available, or if our gene model changes).</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pred</span> <span class="op">=</span> <span class="fu"><a href="../reference/coo_predict.html">coo_predict</a></span><span class="op">(</span><span class="va">norm_main</span><span class="op">)</span></span></code></pre></div>
 </div>
+</div>
+<div class="section level2">
+<h2 id="dzsig-calling">DZsig calling<a class="anchor" aria-label="anchor" href="#dzsig-calling"></a>
+</h2>
+<p>The DZsig classifier can be applied to the same <code>cds</code>
+object:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dzsig_pred</span> <span class="op">=</span> <span class="fu"><a href="../reference/dzsig_rnaseq.html">dzsig_rnaseq</a></span><span class="op">(</span><span class="va">cds</span><span class="op">)</span></span></code></pre></div>
+<p>Thresholds for the DZsig classification are as published for the
+NanoString DLBCL90 assay (Ennishi et al., <em>J Clin Oncol</em> 2019;
+Data Supplement).</p>
+<p>It is also possible obtain both DZsig and COO calls and generate a
+combined “refined COO” classification:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">refined_pred</span> <span class="op">=</span> <span class="fu"><a href="../reference/refined_coo_rnaseq.html">refined_coo_rnaseq</a></span><span class="op">(</span><span class="va">cds</span><span class="op">)</span></span></code></pre></div>
+<p>The returned object of this last function has six columns:</p>
+<ul>
+<li>Sample IDs, drawn from the column names of the cds object.</li>
+<li>LPS_COO - the linear predictor score for the COO classification</li>
+<li>COO - the Cell of Origin classification; either GCB, ABC, or
+Unclassified</li>
+<li>LPS_DZsig - the linear predictor score for the DZsig
+classification</li>
+<li>DZsig - the Dark Zone signature classification; either DZsig-POS,
+DZsig-IND, or DZsig-NEG</li>
+<li>refined_COO - the refined Cell of Origin classification, which is
+assigned hierarchically:
+<ul>
+<li>If ABC, then ABC</li>
+<li>If DZsig-POS, DZsig-POS</li>
+<li>Else, COO (GCB or Unclassified)</li>
+</ul>
+</li>
+</ul>
+<p>For more details, please refer to the documentation in the
+package.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

@@ -7,22 +7,31 @@
 refined_coo_rnaseq(cds)
 }
 \arguments{
-\item{cds}{- a DESeqDataSet object, with raw counts in the "counts" slot.}
+\item{cds}{\itemize{
+\item a DESeqDataSet object, with raw counts in the "counts" slot.
+}}
 }
 \value{
-a data frame with six columns: 
-   * Sample names
-   * COO LPS score prediction
-   * COO class
-   * DZsig LPS score prediction
-   * DZsig class
-   * Refined COO class
+a data frame with six columns:
+\itemize{
+\item Sample names
+\item COO LPS score prediction
+\item COO class
+\item DZsig LPS score prediction
+\item DZsig class
+\item Refined COO class
+}
 }
 \description{
 Wrapper for running coo_normalize, coo_predict, and dzsig_predict
 }
 \details{
 This function is a wrapper that runs the normalization and both COO
-   and DZsig predictions, and then combines the results into a single data frame, 
-   including the refined COO class.
+and DZsig predictions, and then combines the results into a single data frame,
+including the refined COO class. Refined Cell of Origin classification is assigned hierarchically:
+\itemize{
+\item If ABC, then ABC
+\item If DZsig-POS, DZsig-POS
+\item Else, COO (GCB or Unclassified)
+}
 }

@@ -7,7 +7,9 @@
 coo_normalize(cds)
 }
 \arguments{
-\item{cds}{- a DESeqDataSet object, with raw counts in the "counts" slot.}
+\item{cds}{\itemize{
+\item a DESeqDataSet object, with raw counts in the "counts" slot.
+}}
 }
 \value{
 A normalized DESeqDataSet
@@ -17,18 +19,18 @@ The standard normalization function for RNASeq data
 }
 \details{
 this function applies a robust library size normalization procedure
-   to the raw count matrix provided. The goal is to specifically ensure that 
-   the expression values for the data are on a consistent scale, regardless 
-   of the source dataset. For more details on the robust library size 
-   normalization function, refer to the "COO_Classifier" supplemental 
-   vignette.
+to the raw count matrix provided. The goal is to specifically ensure that
+the expression values for the data are on a consistent scale, regardless
+of the source dataset. For more details on the robust library size
+normalization function, refer to the "COO_Classifier" supplemental
+vignette.
 
-   Please note that rownames of the raw count matrix must be either refseq 
-   IDs or ENSEMBL gene IDs. Gene symbols will not work. 
+Please note that rownames of the raw count matrix must be either refseq
+IDs or ENSEMBL gene IDs. Gene symbols will not work.
 
-   Notably, for the purposes of machine learning, we do not care about the 
-   absolute expression of genes, but only their expression relative to other
-   samples. This, combined with the fact that people may not know how to get
-   read lengths easily for new data means that we're skipping any
-   normalization step involving read length.
+Notably, for the purposes of machine learning, we do not care about the
+absolute expression of genes, but only their expression relative to other
+samples. This, combined with the fact that people may not know how to get
+read lengths easily for new data means that we're skipping any
+normalization step involving read length.
 }

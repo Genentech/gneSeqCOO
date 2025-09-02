@@ -38,14 +38,18 @@ dzsig_rnaseq <- function(cds){
 #' @param cds - a DESeqDataSet object, with raw counts in the "counts" slot.
 #' @details This function is a wrapper that runs the normalization and both COO
 #'    and DZsig predictions, and then combines the results into a single data frame, 
-#'    including the refined COO class.
+#'    including the refined COO class. Refined Cell of Origin classification is assigned hierarchically: 
+#'    - If ABC, then ABC
+#'    - If DZsig-POS, DZsig-POS
+#'    - Else, COO (GCB or Unclassified)
 #' @return a data frame with six columns: 
-#'    * Sample names
-#'    * COO LPS score prediction
-#'    * COO class
-#'    * DZsig LPS score prediction
-#'    * DZsig class
-#'    * Refined COO class
+#' 
+#'    - Sample names
+#'    - COO LPS score prediction
+#'    - COO class
+#'    - DZsig LPS score prediction
+#'    - DZsig class
+#'    - Refined COO class
 #' @export
 
 refined_coo_rnaseq <- function(cds){
@@ -197,9 +201,10 @@ refLibrarySize <- function( cds2, ident ){
 #'      needs to be performed, but the expression matrix must have either refseq
 #'      (e.g. "geneID:7900") or ENSEMBL (e.g. ENSG....) gene IDs as the rownames
 #' @return a data frame with three columns:
-#'    * Sample names
-#'    * LPS score prediction
-#'    * COO class
+#' 
+#'    - Sample names
+#'    - LPS score prediction
+#'    - COO class
 #' @importFrom stats predict
 #' @importFrom Biobase fData exprs
 #' @export
@@ -257,11 +262,12 @@ coo_predict <- function(norm_eset, model) {
 #'      needs to be performed, but the expression matrix must have either refseq
 #'      (e.g. "geneID:7900") or ENSEMBL (e.g. ENSG....) gene IDs as the rownames. 
 #'      Thresholds used for classification are -15.6 and -6.3, as per the original DLBCL90 publication 
-#'      (Ennishi et al, *J Clin Oncol* 2019).
+#'      (Ennishi et al, J Clin Oncol 2019).
 #' @return a data frame with three columns: 
-#'    * Sample names
-#'    * LPS score prediction
-#'    * DZsig class
+#' 
+#'    - Sample names
+#'    - LPS score prediction
+#'    - DZsig class
 #' @importFrom stats predict
 #' @importFrom Biobase fData exprs
 #' @export

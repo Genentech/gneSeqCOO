@@ -13,16 +13,18 @@ coo_predict(norm_eset, model)
 }
 \value{
 a data frame with three columns:
-   * Sample names
-   * LPS score prediction
-   * COO class
+\itemize{
+\item Sample names
+\item LPS score prediction
+\item COO class
+}
 }
 \description{
 Function for predicting COO using a normalized RNASeq dataset
 }
 \details{
 This function uses the model generated on the GOYA dataset to
-     predict Cell of Origin on a normalized expression dataset. No subsetting
-     needs to be performed, but the expression matrix must have either refseq
-     (e.g. "geneID:7900") or ENSEMBL (e.g. ENSG....) gene IDs as the rownames
+predict Cell of Origin on a normalized expression dataset. No subsetting
+needs to be performed, but the expression matrix must have either refseq
+(e.g. "geneID:7900") or ENSEMBL (e.g. ENSG....) gene IDs as the rownames
 }

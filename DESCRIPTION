@@ -1,5 +1,5 @@
 Package: gneSeqCOO
-Version: 1.0.0
+Version: 1.1.0
 Date: 2018-06-05
 Title: An RNASeq-based Cell of Origin classifier
 Authors@R: c(person("Chris", "Bolen", role = c("aut", "cre"),
@@ -17,3 +17,4 @@ Suggests: knitr,
 VignetteBuilder: knitr
 Encoding: UTF-8
 URL: https://stunning-adventure-ozvz3n1.pages.github.io/
+Roxygen: list(markdown = TRUE)

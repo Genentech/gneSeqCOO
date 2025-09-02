@@ -7,7 +7,9 @@
 dzsig_rnaseq(cds)
 }
 \arguments{
-\item{cds}{- a DESeqDataSet object, with raw counts in the "counts" slot.}
+\item{cds}{\itemize{
+\item a DESeqDataSet object, with raw counts in the "counts" slot.
+}}
 }
 \value{
 a data frame of DZsig predictions. See dzsig_predict for more details

@@ -7,11 +7,15 @@
 refLibrarySize(cds2, ident)
 }
 \arguments{
-\item{cds2}{- a DESeqDataSet object, with raw counts in the "counts" slot.}
+\item{cds2}{\itemize{
+\item a DESeqDataSet object, with raw counts in the "counts" slot.
+}}
 
-\item{ident}{- Identifiers used in the dataset.
+\item{ident}{\itemize{
+\item Identifiers used in the dataset.
 Should be one of c("refseq","ensembl")
-If not provided, the IGIS version will be inferred from the data.}
+If not provided, the IGIS version will be inferred from the data.
+}}
 }
 \value{
 vector describing the robust library size for the sample

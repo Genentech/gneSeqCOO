@@ -7,7 +7,9 @@
 coo_rnaseq(cds)
 }
 \arguments{
-\item{cds}{- a DESeqDataSet object, with raw counts in the "counts" slot.}
+\item{cds}{\itemize{
+\item a DESeqDataSet object, with raw counts in the "counts" slot.
+}}
 }
 \value{
 a data frame of COO predictions. See coo_predict for more details
@@ -17,7 +19,7 @@ wrapper for running coo_normalize and coo_predict together
 }
 \details{
 This function is a wrapper for the two core COO prediction functions.
-    This function intentionally forces a standard procedure for both 
-    normalization and modeling, as this should give us the best chance of 
-    the model matching up with our training data.
+This function intentionally forces a standard procedure for both
+normalization and modeling, as this should give us the best chance of
+the model matching up with our training data.
 }
