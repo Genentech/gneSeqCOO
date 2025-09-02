@@ -7,7 +7,7 @@
 #'     This function intentionally forces a standard procedure for both 
 #'     normalization and modeling, as this should give us the best chance of 
 #'     the model matching up with our training data.
-#' @return a matrix of COO predictions. See coo_predict for more details
+#' @return a data frame of COO predictions. See coo_predict for more details
 #' @export
 
 coo_rnaseq <- function(cds){
@@ -18,7 +18,57 @@ coo_rnaseq <- function(cds){
 	return(result)
 }
 
+#' Combined DZsig function
+#' @description wrapper for running coo_normalize and dzsig_predict together
+#' @param cds - a DESeqDataSet object, with raw counts in the "counts" slot.
+#' @details This function is a wrapper for the core normalization and prediction functions.
+#' @return a data frame of DZsig predictions. See dzsig_predict for more details
+#' @export
 
+dzsig_rnaseq <- function(cds){
+	cat("Normalizing count matrix...")
+	cds_norm = coo_normalize(cds)
+	cat("Done!\n")
+	result = dzsig_predict(cds_norm)
+	return(result)
+}
+
+#' Refined COO prediction function
+#' @description Wrapper for running coo_normalize, coo_predict, and dzsig_predict
+#' @param cds - a DESeqDataSet object, with raw counts in the "counts" slot.
+#' @details This function is a wrapper that runs the normalization and both COO
+#'    and DZsig predictions, and then combines the results into a single data frame, 
+#'    including the refined COO class.
+#' @return a data frame with six columns: 
+#'    * Sample names
+#'    * COO LPS score prediction
+#'    * COO class
+#'    * DZsig LPS score prediction
+#'    * DZsig class
+#'    * Refined COO class
+#' @export
+
+refined_coo_rnaseq <- function(cds){
+	
+	cat("Normalizing count matrix...")
+	cds_norm = coo_normalize(cds)
+	cat("Done!\n")
+	
+	cat("Predicting COO...")
+	coo = coo_predict(cds_norm)
+ 	colnames(coo) <- c("Sample", "LPS_COO", "COO")
+	cat("Predicting DZsig...")
+ 	dzsig = dzsig_predict(cds_norm)
+ 	colnames(dzsig) <- c("Sample", "LPS_DZsig", "DZsig")
+ 	cat("Done!\n")
+
+	result = merge(coo,dzsig,by="Sample")
+	result$refined_COO <-
+		ifelse(result$COO == "ABC", "ABC",
+			ifelse(result$DZsig == "DZsig-POS", "DZsig-POS", as.character(result$COO))
+		)
+	return(result)
+}
 
 
 
@@ -141,12 +191,12 @@ refLibrarySize <- function( cds2, ident ){
 #' COO prediction function
 #' @description Function for predicting COO using a normalized RNASeq dataset
 #' @param norm_eset A normalized ExpressionSet, as returned by coo_normalize
-#' @param model     The fitted COO model.  
+#' @param model     The fitted COO model.
 #' @details This function uses the model generated on the GOYA dataset to
 #'      predict Cell of Origin on a normalized expression dataset. No subsetting
 #'      needs to be performed, but the expression matrix must have either refseq
 #'      (e.g. "geneID:7900") or ENSEMBL (e.g. ENSG....) gene IDs as the rownames
-#' @return a matrix with three columns: 
+#' @return a data frame with three columns:
 #'    * Sample names
 #'    * LPS score prediction
 #'    * COO class
@@ -154,15 +204,77 @@ refLibrarySize <- function( cds2, ident ){
 #' @importFrom Biobase fData exprs
 #' @export
 
-coo_predict <- function(norm_eset, model){
+coo_predict <- function(norm_eset, model) {
+    ## figure out the IGIS version, if not provided
+    ids = get_id_type(norm_eset)
+
+    ## Check the model, and if not provided, load the default model
+    if (missing(model)) {
+        model = list("refseq" = get("coo_GOYA_21gene_igis3"), "ensembl" = get("coo_GOYA_21gene_igis4"))[[ids]]
+        cat("Model not specified. Using the 21-gene GOYA model...\n")
+    }
+
+    coefs = model$coefficients[-1]
+    coefNames = gsub("\\`", "", names(coefs))
+
+    ## Check that all the genes are present in the dataset
+    if (!all(coefNames %in% rownames(norm_eset))) {
+        missing = coefNames[!(coefNames %in% rownames(norm_eset))]
+        stop(
+            "Some required genes are missing.\n",
+            "Missing genes: ", paste(missing, collapse = " ")
+        )
+    }
+
+    ## Check if any of the genes are flagged as "low expression"
+    if (any(fData(norm_eset[coefNames, ])$isLowCountGene)) {
+        warning(
+            "Some genes in the classifer were flagged as low count. ",
+            "Predictions may be lower confidence."
+        )
+    }
+
+    ## pull out the data
+    x = as.data.frame(t(exprs(norm_eset)[coefNames, ]))
+
+    lps = predict(model, newdata = x)
+    coo = cut(lps, c(-Inf, 1920, 2430, Inf),
+        labels = c("GCB", "UNCLASSIFIED", "ABC")
+    )
+
+    out = data.frame(Sample = names(lps), LPS = lps, COO = coo)
+    rownames(out) = NULL
+    return(out)
+}
+
+
+#' DZsig prediction function
+#' @description Function for predicting DZsig using a normalized RNASeq dataset
+#' @param norm_eset A normalized ExpressionSet, as returned by coo_normalize
+#' @param model     The fitted DZsig model.
+#' @details This function uses the model generated on the GAMBL dataset to
+#'      predict Dark Zone Signature (DZsig) on a normalized expression dataset. No subsetting
+#'      needs to be performed, but the expression matrix must have either refseq
+#'      (e.g. "geneID:7900") or ENSEMBL (e.g. ENSG....) gene IDs as the rownames. 
+#'      Thresholds used for classification are -15.6 and -6.3, as per the original DLBCL90 publication 
+#'      (Ennishi et al, *J Clin Oncol* 2019).
+#' @return a data frame with three columns: 
+#'    * Sample names
+#'    * LPS score prediction
+#'    * DZsig class
+#' @importFrom stats predict
+#' @importFrom Biobase fData exprs
+#' @export
+
+dzsig_predict <- function(norm_eset, model){
   
 	## figure out the IGIS version, if not provided
 	ids = get_id_type(norm_eset)
 
 	## Check the model, and if not provided, load the default model
 	if(missing(model)){
-		model = list("refseq"=get("coo_GOYA_21gene_igis3"), "ensembl"=get("coo_GOYA_21gene_igis4"))[[ids]]
-		cat("Model not specified. Using the 21-gene GOYA model...\n")
+		model = list("refseq"=get("dzsig_GAMBL_29gene_igis3"), "ensembl"=get("dzsig_GAMBL_29gene_igis4"))[[ids]]
+		cat("Model not specified. Using the 29-gene GAMBL model...\n")
 	}
 
 	coefs = model$coefficients[-1]
@@ -185,15 +297,13 @@ coo_predict <- function(norm_eset, model){
 	x = as.data.frame(t(exprs(norm_eset)[coefNames,]))
 
 	lps = predict(model, newdata=x)
-	coo = cut(lps, c(-Inf, 1920, 2430, Inf), 
-		labels=c("GCB","UNCLASSIFIED","ABC"))
+	dzsig = cut(lps, c(-Inf, -15.6, -6.3, Inf), 
+		labels=c("DZsig-NEG","DZsig-IND","DZsig-POS"))
 
-	out = data.frame(Sample=names(lps), LPS=lps, COO=coo)
+	out = data.frame(Sample=names(lps), LPS=lps, DZsig=dzsig)
 	rownames(out) = NULL
 	return(out)
 }
-
-
 
 
 #' Attempt to guess the identifiers used in the model

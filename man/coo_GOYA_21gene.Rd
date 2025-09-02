@@ -22,7 +22,7 @@ coo_GOYA_21gene_igis3
 coo_GOYA_21gene_igis4
 }
 \description{
-An 'lm' object containing a 21 gene COO classifier, developed from the GOYA 
+An 'lm' object containing a 21 gene COO classifier, developed from the GOYA
 dataset. Two versions are available, for data processed with either
 IGIS3.0 or IGIS4.0
 }

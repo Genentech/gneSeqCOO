@@ -10,7 +10,7 @@ Description: This package contains code for applying a Cell of Origin classifier
 	to RNASeq data. The process consists of three steps: 1) normalizing, 2) calculating 
 	the LPS score, and 3) splitting samples into GCB/ABC based on fixed cut-points.
 License: MIT + file LICENSE
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 LazyData: TRUE
 Suggests: knitr,
     rmarkdown

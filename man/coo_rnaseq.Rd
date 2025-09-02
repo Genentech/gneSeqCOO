@@ -10,7 +10,7 @@ coo_rnaseq(cds)
 \item{cds}{- a DESeqDataSet object, with raw counts in the "counts" slot.}
 }
 \value{
-a matrix of COO predictions. See coo_predict for more details
+a data frame of COO predictions. See coo_predict for more details
 }
 \description{
 wrapper for running coo_normalize and coo_predict together

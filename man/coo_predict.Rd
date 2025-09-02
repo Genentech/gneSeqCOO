@@ -12,7 +12,7 @@ coo_predict(norm_eset, model)
 \item{model}{The fitted COO model.}
 }
 \value{
-a matrix with three columns: 
+a data frame with three columns:
    * Sample names
    * LPS score prediction
    * COO class
